@@ -34,7 +34,9 @@ services:
       context: .
       dockerfile: docker/Dockerfile.prod
     restart: always
-    command: celery -A config beat --loglevel=info
+    # --schedule=/tmp/... — schedule-файл пишется в /tmp, чтобы не зависеть
+    # от permissions на /app в контейнере.
+    command: celery -A config beat --loglevel=info --schedule=/tmp/celerybeat-schedule
     env_file:
       - .env
     depends_on:

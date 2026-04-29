@@ -37,6 +37,12 @@ RUN groupadd -r app && useradd -r -g app -d /app -s /bin/bash app
 WORKDIR /app
 COPY --chown=app:app . /app
 
+# Сам каталог /app тоже должен быть владельцем app — иначе gunicorn не создаст
+# свой `.gunicorn` control-dir, а celery-beat не сможет писать `celerybeat-schedule`.
+RUN chown -R app:app /app \
+    && mkdir -p /app/staticfiles /app/media \
+    && chown -R app:app /app/staticfiles /app/media
+
 USER app
 
 RUN python manage.py collectstatic --noinput || true
@@ -46,8 +52,11 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
     CMD curl -fsS http://localhost:8000/api/v1/health/ || exit 1
 
+# --worker-tmp-dir /dev/shm — gunicorn worker heartbeat. Стандартная prod-практика
+# для Docker, где /tmp может оказаться tmpfs с ограничениями.
 CMD ["gunicorn", "config.wsgi:application", \
      "--workers=3", \
      "--bind=0.0.0.0:8000", \
+     "--worker-tmp-dir=/dev/shm", \
      "--access-logfile=-", \
      "--error-logfile=-"]
