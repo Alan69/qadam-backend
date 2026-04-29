@@ -200,6 +200,7 @@ make test-cov      # с покрытием
 
 ## Ссылки
 
+- [Деплой на production-сервер](docs/deployment.md) — пошаговый гайд (Docker + Caddy + автоматический SSL)
 - [Спецификация фундамента](docs/superpowers/specs/2026-04-27-qadam-backend-foundation-design.md)
 - [Спецификация модуля обучения](docs/superpowers/specs/2026-04-28-qadam-learning-module-design.md)
 - [Auth-флоу подробно](docs/auth-flow.md)

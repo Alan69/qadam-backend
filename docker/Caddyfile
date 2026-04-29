@@ -1,0 +1,34 @@
+# Caddyfile — автоматический HTTPS через Let's Encrypt.
+#
+# Caddy сам получает сертификат при первом запуске и обновляет автоматически.
+# Условие: домен (DOMAIN env) должен резолвиться в IP сервера ДО первого старта.
+
+{$DOMAIN} {
+    # Сжатие
+    encode gzip zstd
+
+    # Статика Django
+    handle_path /static/* {
+        root * /srv/staticfiles
+        file_server
+    }
+
+    # Медиа Django
+    handle_path /media/* {
+        root * /srv/media
+        file_server
+    }
+
+    # Всё остальное — в Django через web:8000
+    reverse_proxy web:8000 {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Логирование
+    log {
+        output stdout
+        format console
+    }
+}
