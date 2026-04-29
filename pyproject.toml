@@ -1,0 +1,114 @@
+[project]
+name = "qadam-backend"
+version = "0.1.0"
+description = "Qadam educational platform backend (ENT preparation)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.1,<5.2",
+    "djangorestframework>=3.15",
+    "djangorestframework-simplejwt>=5.3",
+    "drf-spectacular>=0.27",
+    "django-cors-headers>=4.4",
+    "django-environ>=0.11",
+    "django-modeltranslation>=0.19",
+    "django-redis>=5.4",
+    "django-extensions>=3.2",
+    "psycopg[binary]>=3.2",
+    "celery>=5.4",
+    "redis>=5.0",
+    "gunicorn>=23.0",
+    "uvicorn>=0.30",
+    "argon2-cffi>=23.1",
+    "phonenumbers>=8.13",
+    "pyjwt>=2.9",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-django>=4.9",
+    "pytest-cov>=5.0",
+    "factory-boy>=3.3",
+    "freezegun>=1.5",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "django-stubs[compatible-mypy]>=5.1",
+    "djangorestframework-stubs[compatible-mypy]>=3.15",
+    "ipython>=8.27",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src"]
+extend-exclude = ["migrations"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "DJ",  # flake8-django
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+    "B008",  # function call in default arg (Django pattern)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/migrations/*" = ["ALL"]
+"**/settings/*" = ["F405", "F403"]
+"**/tests/**" = ["S101"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.dev"
+python_files = ["test_*.py", "tests.py"]
+addopts = [
+    "--reuse-db",
+    "--strict-markers",
+    "--tb=short",
+]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["src/apps", "src/services"]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/admin.py",
+    "*/apps.py",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+mypy_path = "src"
+explicit_package_bases = true
+ignore_missing_imports = true
+check_untyped_defs = true
+
+[tool.django-stubs]
+django_settings_module = "config.settings.dev"
+
+[[tool.mypy.overrides]]
+module = "*.migrations.*"
+ignore_errors = true

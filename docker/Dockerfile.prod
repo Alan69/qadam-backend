@@ -1,0 +1,53 @@
+FROM python:3.12-slim AS builder
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    UV_SYSTEM_PYTHON=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir uv
+
+WORKDIR /build
+COPY pyproject.toml /build/
+RUN uv pip install --system -r pyproject.toml
+
+
+FROM python:3.12-slim AS runtime
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/app/src \
+    DJANGO_SETTINGS_MODULE=config.settings.prod
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libpq5 \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+RUN groupadd -r app && useradd -r -g app -d /app -s /bin/bash app
+
+WORKDIR /app
+COPY --chown=app:app . /app
+
+USER app
+
+RUN python manage.py collectstatic --noinput || true
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD curl -fsS http://localhost:8000/api/v1/health/ || exit 1
+
+CMD ["gunicorn", "config.wsgi:application", \
+     "--workers=3", \
+     "--bind=0.0.0.0:8000", \
+     "--access-logfile=-", \
+     "--error-logfile=-"]

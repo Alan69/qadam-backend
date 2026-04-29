@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtualenv
+.venv/
+venv/
+env/
+ENV/
+
+# uv
+.uv/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Django
+*.log
+*.pot
+*.pyc
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Migrations are committed (see Django convention) — do NOT ignore them
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Testing
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+htmlcov/
+coverage.xml
+*.cover
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff
+.ruff_cache/
+
+# Docker
+docker-compose.override.yml
+
+# Project-specific
+.PDS_Store
+
+# Celery beat schedule (runtime state)
+celerybeat-schedule
+celerybeat-schedule.*
+celerybeat.pid
