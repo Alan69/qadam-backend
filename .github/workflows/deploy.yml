@@ -1,0 +1,61 @@
+name: Deploy
+
+# Срабатывает ТОЛЬКО если CI workflow успешно завершился на main.
+# То есть: push в main → CI → если зелёное → Deploy.
+on:
+  workflow_run:
+    workflows: ["CI"]
+    branches: [main]
+    types: [completed]
+  workflow_dispatch:  # ручной запуск через UI GitHub
+
+jobs:
+  deploy:
+    name: Deploy to production
+    # Защита: запускается только когда CI прошёл (или при ручном запуске).
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script_stop: true
+          # Логика:
+          # 1. fetch + reset --hard — местные правки на сервере не должны быть.
+          #    Если кто-то их сделал — деплой их сметёт. Это намеренно.
+          # 2. build — пересобрать образ web (Dockerfile / зависимости могли поменяться)
+          # 3. migrate — НА НОВОМ образе через `run --rm` (одноразовый контейнер).
+          #    Если миграция упадёт — set -e уронит скрипт и предыдущая
+          #    версия продолжит работать.
+          # 4. collectstatic — обновить static-файлы в volume под новый билд.
+          # 5. up -d — поднимает новые web/celery/celery-beat (пересоздаются под новый образ).
+          script: |
+            set -e
+            cd ~/qadam-backend
+            echo "→ git fetch + reset --hard origin/main"
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "→ docker compose build"
+            docker compose -f docker-compose.prod.yml build
+
+            echo "→ Running migrations on new image"
+            docker compose -f docker-compose.prod.yml run --rm web python manage.py migrate --noinput
+
+            echo "→ collectstatic"
+            docker compose -f docker-compose.prod.yml run --rm web python manage.py collectstatic --noinput
+
+            echo "→ Restarting services with new image"
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            echo "→ Cleaning old images"
+            docker image prune -f
+
+            echo "✓ Deploy finished"
