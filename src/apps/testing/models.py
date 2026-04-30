@@ -3,6 +3,7 @@
 Отдельный пул вопросов от мини-тестов уроков (банк ЕНТ-вопросов имеет свой
 жизненный цикл — импорт партиями, метки сложности).
 """
+
 from __future__ import annotations
 
 from django.conf import settings
@@ -100,12 +101,8 @@ class ENTSubjectResult(TimestampedModel):
 
 
 class ENTAnswer(TimestampedModel):
-    session = models.ForeignKey(
-        ENTTestSession, on_delete=models.CASCADE, related_name="answers"
-    )
-    question = models.ForeignKey(
-        ENTQuestion, on_delete=models.PROTECT, related_name="user_answers"
-    )
+    session = models.ForeignKey(ENTTestSession, on_delete=models.CASCADE, related_name="answers")
+    question = models.ForeignKey(ENTQuestion, on_delete=models.PROTECT, related_name="user_answers")
     user_answer = models.JSONField("ответ ученика", default=list)
     is_correct = models.BooleanField("верно", default=False)
     time_spent_seconds = models.PositiveIntegerField("время (сек)", default=0)

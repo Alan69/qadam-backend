@@ -1,4 +1,5 @@
 """Тесты quiz-эндпоинтов: start, submit, history, attempt-detail."""
+
 from __future__ import annotations
 
 import pytest
@@ -15,9 +16,7 @@ from tests.factories import (
 
 @pytest.mark.django_db
 class TestQuizStartAPI:
-    def test_start_returns_questions_without_correct_answers(
-        self, api_client: APIClient
-    ):
+    def test_start_returns_questions_without_correct_answers(self, api_client: APIClient):
         student = UserFactory()
         lesson = make_lesson_with_quiz(questions=3)
         api_client.force_authenticate(user=student)
@@ -56,16 +55,12 @@ class TestQuizSubmitAPI:
         attempt_id = r.data["attempt_id"]
         # Берём правильные ответы из БД (они не в /start/ payload)
         questions = lesson.quiz.questions.all().order_by("order", "id")
-        return attempt_id, [
-            {"question_id": q.id, "value": q.correct_answers} for q in questions
-        ]
+        return attempt_id, [{"question_id": q.id, "value": q.correct_answers} for q in questions]
 
     def test_submit_perfect_score(self, api_client: APIClient):
         student = UserFactory()
         lesson = make_lesson_with_quiz(questions=5)
-        attempt_id, answers = self._start_and_get_correct_answers(
-            api_client, student, lesson
-        )
+        attempt_id, answers = self._start_and_get_correct_answers(api_client, student, lesson)
         r = api_client.post(
             f"/api/v1/learning/quiz-attempts/{attempt_id}/submit/",
             {"answers": answers},
@@ -108,9 +103,7 @@ class TestQuizSubmitAPI:
         student_a = UserFactory()
         student_b = UserFactory()
         lesson = make_lesson_with_quiz()
-        attempt_id, answers = self._start_and_get_correct_answers(
-            api_client, student_a, lesson
-        )
+        attempt_id, answers = self._start_and_get_correct_answers(api_client, student_a, lesson)
 
         api_client.force_authenticate(user=student_b)
         r = api_client.post(
@@ -124,9 +117,7 @@ class TestQuizSubmitAPI:
     def test_double_submit_returns_400(self, api_client: APIClient):
         student = UserFactory()
         lesson = make_lesson_with_quiz()
-        attempt_id, answers = self._start_and_get_correct_answers(
-            api_client, student, lesson
-        )
+        attempt_id, answers = self._start_and_get_correct_answers(api_client, student, lesson)
         api_client.post(
             f"/api/v1/learning/quiz-attempts/{attempt_id}/submit/",
             {"answers": answers},
@@ -193,9 +184,7 @@ class TestQuizAttemptDetailAPI:
         r1 = api_client.post(f"/api/v1/learning/lessons/{lesson.id}/quiz/start/")
         attempt_id = r1.data["attempt_id"]
         questions = list(lesson.quiz.questions.all().order_by("order", "id"))
-        answers = [
-            {"question_id": q.id, "value": q.correct_answers} for q in questions
-        ]
+        answers = [{"question_id": q.id, "value": q.correct_answers} for q in questions]
         api_client.post(
             f"/api/v1/learning/quiz-attempts/{attempt_id}/submit/",
             {"answers": answers},

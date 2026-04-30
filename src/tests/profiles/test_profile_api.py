@@ -1,4 +1,5 @@
 """Тесты Profile API."""
+
 import pytest
 from rest_framework.test import APIClient
 

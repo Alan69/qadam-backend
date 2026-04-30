@@ -1,4 +1,5 @@
 """End-to-end тесты регистрации (3 шага)."""
+
 import pytest
 from django.core.cache import cache
 from rest_framework.test import APIClient

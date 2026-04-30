@@ -3,6 +3,7 @@
 Все ошибки приводятся к виду:
     {"error": {"code": "...", "message": "...", "details": {...}}}
 """
+
 from __future__ import annotations
 
 from typing import Any

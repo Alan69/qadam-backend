@@ -1,4 +1,5 @@
 """Student profile + curator assignment history."""
+
 from __future__ import annotations
 
 from django.conf import settings
@@ -38,9 +39,7 @@ class StudentProfile(TimestampedModel):
         validators=[validate_phone],
     )
     grade = models.IntegerField("класс", choices=Grade.choices)
-    learning_language = models.CharField(
-        "язык обучения", max_length=8, choices=Language.choices
-    )
+    learning_language = models.CharField("язык обучения", max_length=8, choices=Language.choices)
     target_score = models.PositiveIntegerField("целевой балл", null=True, blank=True)
     current_level = models.PositiveIntegerField("текущий уровень", default=0)
 

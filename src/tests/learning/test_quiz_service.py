@@ -1,18 +1,16 @@
 """Тесты сервиса мини-тестов: start_attempt, submit_attempt, скоринг, прогресс."""
+
 from __future__ import annotations
 
-from datetime import timedelta
-
 import pytest
-from django.utils import timezone
 from freezegun import freeze_time
 
 from apps.common.exceptions import QadamAPIError
-from apps.learning.models import Lesson, LessonProgress, QuizAttempt, QuizQuestion
+from apps.learning.models import LessonProgress, QuizAttempt, QuizQuestion
 from apps.learning.services.quiz import (
     is_answer_correct,
-    start_attempt,
     stars_for_score,
+    start_attempt,
     submit_attempt,
 )
 from tests.factories import (
@@ -316,7 +314,9 @@ class TestSubmitAttempt:
         lesson = make_lesson_with_quiz()
         with freeze_time("2026-04-28 12:00:00"):
             attempt, answers = self._make_attempt(user, lesson)
-        with freeze_time("2026-04-29 13:00:00"):  # 25h позже
-            with pytest.raises(QadamAPIError) as exc_info:
-                submit_attempt(user=user, attempt_id=attempt.id, answers=answers)
+        with (
+            freeze_time("2026-04-29 13:00:00"),
+            pytest.raises(QadamAPIError) as exc_info,
+        ):  # 25h позже
+            submit_attempt(user=user, attempt_id=attempt.id, answers=answers)
         assert exc_info.value.code == "ATTEMPT_EXPIRED"

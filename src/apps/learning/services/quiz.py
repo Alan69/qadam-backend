@@ -1,4 +1,5 @@
 """Бизнес-операции по мини-тесту: старт, сабмит, скоринг."""
+
 from __future__ import annotations
 
 from datetime import timedelta
@@ -108,9 +109,8 @@ def submit_attempt(
 ) -> dict:
     """Засабмитить ответы, посчитать балл, обновить прогресс, вернуть review-payload."""
     try:
-        attempt = (
-            QuizAttempt.objects.select_related("quiz__lesson__topic__section__subject")
-            .get(pk=attempt_id)
+        attempt = QuizAttempt.objects.select_related("quiz__lesson__topic__section__subject").get(
+            pk=attempt_id
         )
     except QuizAttempt.DoesNotExist as exc:
         raise QadamAPIError(

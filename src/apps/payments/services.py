@@ -1,4 +1,5 @@
 """Бизнес-операции вокруг подписок."""
+
 from __future__ import annotations
 
 from django.utils import timezone

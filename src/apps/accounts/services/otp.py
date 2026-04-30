@@ -1,4 +1,5 @@
 """OTP-сервис: генерация, хранение в Redis, проверка с rate-limit."""
+
 from __future__ import annotations
 
 import secrets

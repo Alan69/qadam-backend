@@ -1,4 +1,5 @@
 """DRF serializers для auth-эндпоинтов."""
+
 from __future__ import annotations
 
 from django.contrib.auth.password_validation import validate_password

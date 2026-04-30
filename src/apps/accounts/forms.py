@@ -1,4 +1,5 @@
 """Кастомные формы для Django Admin (т.к. наш User использует phone, а не username)."""
+
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 

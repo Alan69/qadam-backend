@@ -1,4 +1,5 @@
 """factory_boy фабрики для тестов модуля обучения."""
+
 from __future__ import annotations
 
 from datetime import timedelta
@@ -150,7 +151,7 @@ class TariffFactory(DjangoModelFactory):
     is_active = True
 
     @factory.post_generation
-    def subjects(self, create: bool, extracted, **kwargs) -> None:  # noqa: D401
+    def subjects(self, create: bool, extracted, **kwargs) -> None:
         if not create:
             return
         if extracted:

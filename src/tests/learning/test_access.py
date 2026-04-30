@@ -1,4 +1,5 @@
 """Тесты paywall, sequential unlock и lock_reason."""
+
 from __future__ import annotations
 
 import pytest
@@ -150,9 +151,7 @@ class TestUnlockLogic:
         second = LessonFactory(topic=first.topic, order=1)
 
         assert is_lesson_unlocked_for_user(user, second) is False
-        assert (
-            lock_reason_for_lesson(user, second) == LOCK_REASON_PREVIOUS_NOT_COMPLETED
-        )
+        assert lock_reason_for_lesson(user, second) == LOCK_REASON_PREVIOUS_NOT_COMPLETED
 
     def test_second_lesson_unlocks_after_first_gets_one_star(self):
         user = UserFactory()
@@ -187,6 +186,4 @@ class TestUnlockLogic:
         LessonProgress.objects.create(user=user, lesson=first, stars=0)
 
         assert is_lesson_unlocked_for_user(user, second) is False
-        assert (
-            lock_reason_for_lesson(user, second) == LOCK_REASON_PREVIOUS_NOT_COMPLETED
-        )
+        assert lock_reason_for_lesson(user, second) == LOCK_REASON_PREVIOUS_NOT_COMPLETED

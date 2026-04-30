@@ -1,4 +1,5 @@
 """Бизнес-операции над профилями."""
+
 from __future__ import annotations
 
 from django.db import transaction

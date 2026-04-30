@@ -3,6 +3,7 @@
 Большинство ответов формируются в `selectors.py` как готовые dict'ы — здесь
 сериалайзеры используются как «схемы» для drf-spectacular (OpenAPI).
 """
+
 from __future__ import annotations
 
 from rest_framework import serializers

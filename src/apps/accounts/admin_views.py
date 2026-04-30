@@ -1,4 +1,5 @@
 """Admin endpoints under /api/v1/admin/users/ — только для SUPER_ADMIN."""
+
 from __future__ import annotations
 
 from drf_spectacular.utils import extend_schema
@@ -108,9 +109,7 @@ class AdminUserViewSet(
         try:
             curator = User.objects.get(pk=curator_id, role=User.Role.CURATOR)
         except User.DoesNotExist as exc:
-            raise QadamAPIError(
-                message="Куратор не найден.", code="CURATOR_NOT_FOUND"
-            ) from exc
+            raise QadamAPIError(message="Куратор не найден.", code="CURATOR_NOT_FOUND") from exc
 
         from apps.profiles.services import assign_curator  # late import
 

@@ -3,6 +3,7 @@
 Реальная интеграция с Gemini + Qdrant — на следующих этапах. Пока модели
 для хранения диалогов и оценок качества.
 """
+
 from __future__ import annotations
 
 from django.conf import settings

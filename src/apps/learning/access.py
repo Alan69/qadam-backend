@@ -3,6 +3,7 @@
 Эти функции должны оставаться без побочных эффектов — они вызываются
 многократно (в каждом сериалайзере иерархии), и тесты на них дешёвые.
 """
+
 from __future__ import annotations
 
 from django.db.models import Q
@@ -11,7 +12,6 @@ from apps.accounts.models import User
 from apps.payments.services import get_active_subscription
 
 from .models import Lesson, LessonProgress, Subject
-
 
 # Энум причин блокировки — для UI (фронт использует чтобы показать нужный CTA).
 LOCK_REASON_UNPUBLISHED = "unpublished"
@@ -31,11 +31,7 @@ def has_subscription_access(user: User, subject: Subject) -> bool:
 
 def is_lesson_free(lesson: Lesson) -> bool:
     """Первый урок предмета (детерминированно по `order=0` на каждом уровне)."""
-    return (
-        lesson.order == 0
-        and lesson.topic.order == 0
-        and lesson.topic.section.order == 0
-    )
+    return lesson.order == 0 and lesson.topic.order == 0 and lesson.topic.section.order == 0
 
 
 def previous_lesson(lesson: Lesson) -> Lesson | None:
@@ -145,6 +141,4 @@ def is_lesson_unlocked_for_user(user: User, lesson: Lesson) -> bool:
 
 
 def _has_at_least_one_star(user: User, lesson: Lesson) -> bool:
-    return LessonProgress.objects.filter(
-        user=user, lesson=lesson, stars__gte=1
-    ).exists()
+    return LessonProgress.objects.filter(user=user, lesson=lesson, stars__gte=1).exists()

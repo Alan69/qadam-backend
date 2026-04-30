@@ -1,4 +1,5 @@
 """URL routing для /api/v1/learning/."""
+
 from django.urls import path
 
 from . import views

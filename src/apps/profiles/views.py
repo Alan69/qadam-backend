@@ -1,4 +1,5 @@
 """API endpoints для /api/v1/profile/."""
+
 from __future__ import annotations
 
 from drf_spectacular.utils import extend_schema

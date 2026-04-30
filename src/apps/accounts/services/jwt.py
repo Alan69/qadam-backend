@@ -1,4 +1,5 @@
 """Helpers вокруг simplejwt — выдача JWT pair и logout-all."""
+
 from __future__ import annotations
 
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken

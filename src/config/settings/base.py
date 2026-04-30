@@ -1,4 +1,5 @@
 """Base Django settings shared across environments."""
+
 from datetime import timedelta
 from pathlib import Path
 
@@ -168,12 +169,8 @@ REST_FRAMEWORK = {
 
 # ─── JWT (simplejwt) ─────────────────────────────────────────────────────────
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(
-        minutes=env.int("JWT_ACCESS_LIFETIME_MINUTES", default=15)
-    ),
-    "REFRESH_TOKEN_LIFETIME": timedelta(
-        days=env.int("JWT_REFRESH_LIFETIME_DAYS", default=30)
-    ),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=env.int("JWT_ACCESS_LIFETIME_MINUTES", default=15)),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=env.int("JWT_REFRESH_LIFETIME_DAYS", default=30)),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": True,
@@ -214,9 +211,7 @@ QADAM = {
     "OTP_TTL_SECONDS": env.int("OTP_TTL_SECONDS", default=300),
     "OTP_LENGTH": env.int("OTP_LENGTH", default=6),
     "OTP_REQUEST_RATE_LIMIT": env.int("OTP_REQUEST_RATE_LIMIT", default=3),
-    "OTP_REQUEST_RATE_WINDOW_SECONDS": env.int(
-        "OTP_REQUEST_RATE_WINDOW_SECONDS", default=600
-    ),
+    "OTP_REQUEST_RATE_WINDOW_SECONDS": env.int("OTP_REQUEST_RATE_WINDOW_SECONDS", default=600),
     "OTP_VERIFY_MAX_ATTEMPTS": env.int("OTP_VERIFY_MAX_ATTEMPTS", default=5),
     "OTP_VERIFY_LOCKOUT_SECONDS": env.int("OTP_VERIFY_LOCKOUT_SECONDS", default=900),
     "VERIFICATION_TOKEN_LIFETIME_MINUTES": env.int(

@@ -1,5 +1,8 @@
 """Auth API views."""
+
 from __future__ import annotations
+
+import contextlib
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
@@ -151,10 +154,8 @@ class RefreshView(_OpenView):
         # ROTATE_REFRESH_TOKENS=True + BLACKLIST_AFTER_ROTATION=True:
         # blacklist старый refresh, выдаём новый (логика повторяет
         # simplejwt.TokenRefreshSerializer).
-        try:
+        with contextlib.suppress(AttributeError):
             refresh.blacklist()
-        except AttributeError:
-            pass
         refresh.set_jti()
         refresh.set_exp()
         refresh.set_iat()

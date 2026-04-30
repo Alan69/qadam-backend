@@ -4,6 +4,7 @@
 SECRET_KEY, что и Django, имеет короткий TTL и собственный claim `purpose`,
 чтобы токен из одного флоу нельзя было использовать в другом.
 """
+
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta

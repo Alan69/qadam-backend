@@ -3,6 +3,7 @@
 Constraint «у пользователя не более одной активной подписки» обеспечивается
 partial unique index на уровне БД (см. Meta.constraints).
 """
+
 from __future__ import annotations
 
 from django.conf import settings
@@ -18,9 +19,7 @@ class Tariff(TimestampedModel):
     has_learning = models.BooleanField("доступ к обучению", default=True)
     has_testing = models.BooleanField("доступ к ЕНТ-тестам", default=True)
     has_ai_tutor = models.BooleanField("доступ к AI Tutor", default=False)
-    subjects = models.ManyToManyField(
-        "learning.Subject", related_name="tariffs", blank=True
-    )
+    subjects = models.ManyToManyField("learning.Subject", related_name="tariffs", blank=True)
     is_active = models.BooleanField("активен", default=True)
 
     class Meta:

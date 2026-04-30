@@ -3,6 +3,7 @@
 Сам статус клиента (NEW / IN_WORK / ...) хранится прямо в StudentProfile.sales_status.
 Здесь — комментарии и история смены статусов.
 """
+
 from __future__ import annotations
 
 from django.conf import settings

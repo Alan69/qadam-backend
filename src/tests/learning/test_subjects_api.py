@@ -1,16 +1,15 @@
 """Тесты GET /subjects/ и /subjects/{id}/."""
+
 from __future__ import annotations
 
 import pytest
 from rest_framework.test import APIClient
 
-from apps.learning.models import Lesson, LessonProgress
+from apps.learning.models import LessonProgress
 from tests.factories import (
     LessonFactory,
-    SubjectFactory,
     SubscriptionFactory,
     TariffFactory,
-    TopicFactory,
     UserFactory,
     make_lesson_with_quiz,
 )

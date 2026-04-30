@@ -3,6 +3,7 @@
 Иерархия из ТЗ §8. На текущем этапе — только модели + admin, без эндпоинтов.
 Поля name/description мультиязычны (см. translation.py).
 """
+
 from __future__ import annotations
 
 from django.db import models

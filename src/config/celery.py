@@ -1,4 +1,5 @@
 """Celery application instance."""
+
 import os
 
 from celery import Celery

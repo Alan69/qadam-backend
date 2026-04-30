@@ -1,4 +1,5 @@
 """Тесты на нормализацию телефонов."""
+
 import pytest
 from django.core.exceptions import ValidationError
 

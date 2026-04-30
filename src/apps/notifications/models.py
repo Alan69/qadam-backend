@@ -1,4 +1,5 @@
 """Скелет уведомлений. ТЗ §5."""
+
 from __future__ import annotations
 
 from django.conf import settings

@@ -1,4 +1,5 @@
 """Тесты обновлённого /profile/dashboard/ — теперь с реальными данными."""
+
 from __future__ import annotations
 
 import pytest

@@ -1,4 +1,5 @@
 """Тесты SmsProvider адаптера."""
+
 import logging
 
 from services.sms import SmsSendResult, get_sms_provider

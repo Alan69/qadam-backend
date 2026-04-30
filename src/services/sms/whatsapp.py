@@ -7,6 +7,7 @@ Meta WhatsApp Business API). Чтобы внедрить:
 2. Заменить тело `send()` на реальный HTTP-запрос (httpx / requests).
 3. Не забыть подключить ретраи и таймауты.
 """
+
 from __future__ import annotations
 
 import logging
@@ -39,5 +40,5 @@ class WhatsAppSmsProvider(SmsProvider):
         # Реальная интеграция — замените тело метода и удалите NotImplementedError.
         raise NotImplementedError(
             "Реальная интеграция WhatsApp ещё не реализована. "
-            "Подключите HTTP-клиент к {url}.".format(url=self.api_url)
+            f"Подключите HTTP-клиент к {self.api_url}."
         )

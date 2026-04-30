@@ -1,4 +1,5 @@
 """Shared abstract base models."""
+
 from django.db import models
 
 

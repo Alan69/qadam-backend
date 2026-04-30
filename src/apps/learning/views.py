@@ -1,4 +1,5 @@
 """API endpoints для модуля обучения."""
+
 from __future__ import annotations
 
 from drf_spectacular.utils import extend_schema
@@ -150,9 +151,7 @@ class LessonAttemptsHistoryView(_StudentView):
     )
     def get(self, request: Request, lesson_id: int) -> Response:
         attempts = (
-            QuizAttempt.objects.filter(
-                user=request.user, quiz__lesson_id=lesson_id
-            )
+            QuizAttempt.objects.filter(user=request.user, quiz__lesson_id=lesson_id)
             .order_by("-started_at")
             .values(
                 "id",
@@ -176,9 +175,7 @@ class QuizAttemptDetailView(_StudentView):
     )
     def get(self, request: Request, attempt_id: int) -> Response:
         try:
-            attempt = QuizAttempt.objects.select_related(
-                "quiz__lesson"
-            ).get(pk=attempt_id)
+            attempt = QuizAttempt.objects.select_related("quiz__lesson").get(pk=attempt_id)
         except QuizAttempt.DoesNotExist as exc:
             raise QadamAPIError(
                 message="Попытка не найдена.",

@@ -8,6 +8,7 @@
     docker compose exec web python manage.py seed_learning
     docker compose exec web python manage.py seed_learning --reset
 """
+
 from __future__ import annotations
 
 from django.core.management.base import BaseCommand

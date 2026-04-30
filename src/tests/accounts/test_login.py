@@ -1,4 +1,5 @@
 """Тесты login / refresh / logout."""
+
 import pytest
 from rest_framework.test import APIClient
 
@@ -45,9 +46,7 @@ class TestLogin:
         assert r.status_code == 403
         assert r.data["error"]["code"] == "ACCOUNT_INACTIVE"
 
-    def test_login_rate_limited_after_5_failures(
-        self, api_client: APIClient, user: User, settings
-    ):
+    def test_login_rate_limited_after_5_failures(self, api_client: APIClient, user: User, settings):
         settings.QADAM["LOGIN_MAX_ATTEMPTS"] = 3
         for _ in range(3):
             api_client.post(

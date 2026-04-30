@@ -3,6 +3,7 @@
 ТЗ §6. Бизнес-логика последовательного открытия уроков и звёзд — на следующих
 этапах. Здесь только структура данных + content_status (для контент-менеджера).
 """
+
 from __future__ import annotations
 
 from django.conf import settings

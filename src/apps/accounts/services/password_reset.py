@@ -1,4 +1,5 @@
 """Восстановление пароля (3 шага, аналогично регистрации)."""
+
 from __future__ import annotations
 
 from django.conf import settings
@@ -36,15 +37,11 @@ def verify_password_reset_code(*, raw_phone: str, code: str) -> str:
 
 
 def confirm_password_reset(*, reset_token: str, new_password: str) -> User:
-    phone = decode_verification_token(
-        reset_token, expected_purpose=OTPPurpose.PASSWORD_RESET.value
-    )
+    phone = decode_verification_token(reset_token, expected_purpose=OTPPurpose.PASSWORD_RESET.value)
     try:
         user = User.objects.get(phone=phone)
     except User.DoesNotExist as exc:
-        raise QadamAPIError(
-            message="Пользователь не найден.", code="USER_NOT_FOUND"
-        ) from exc
+        raise QadamAPIError(message="Пользователь не найден.", code="USER_NOT_FOUND") from exc
 
     validate_password(new_password, user=user)
     user.set_password(new_password)

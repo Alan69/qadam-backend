@@ -5,6 +5,7 @@
 - Минимум обращений к БД (annotate / prefetch_related).
 - Чисто словарные структуры на выходе. Сериалайзер только переименовывает / выкидывает поля.
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -32,18 +33,13 @@ def subject_list_for_user(user: User) -> list[dict[str, Any]]:
     """Все опубликованные предметы с агрегатами по этому ученику."""
     # Опубликованные уроки — единственный источник правды о «общем количестве»
     # уроков предмета (в админке могут лежать черновики, но ученик их не видит).
-    subjects = (
-        Subject.objects.annotate(
-            lessons_total=Count(
-                "sections__topics__lessons",
-                filter=Q(
-                    sections__topics__lessons__content_status=Lesson.ContentStatus.PUBLISHED
-                ),
-                distinct=True,
-            ),
-        )
-        .order_by("name")
-    )
+    subjects = Subject.objects.annotate(
+        lessons_total=Count(
+            "sections__topics__lessons",
+            filter=Q(sections__topics__lessons__content_status=Lesson.ContentStatus.PUBLISHED),
+            distinct=True,
+        ),
+    ).order_by("name")
 
     # За один запрос вытаскиваем прогресс ученика по всем урокам всех предметов.
     progress_rows = LessonProgress.objects.filter(user=user).values(
@@ -92,12 +88,12 @@ def subject_detail_for_user(user: User, subject_id: int) -> dict[str, Any] | Non
     except Subject.DoesNotExist:
         return None
 
-    lesson_qs = Lesson.objects.filter(
-        content_status=Lesson.ContentStatus.PUBLISHED
-    ).order_by("order", "id")
-    topic_qs = Topic.objects.prefetch_related(
-        Prefetch("lessons", queryset=lesson_qs)
-    ).order_by("order", "id")
+    lesson_qs = Lesson.objects.filter(content_status=Lesson.ContentStatus.PUBLISHED).order_by(
+        "order", "id"
+    )
+    topic_qs = Topic.objects.prefetch_related(Prefetch("lessons", queryset=lesson_qs)).order_by(
+        "order", "id"
+    )
     section_qs = (
         Section.objects.filter(subject=subject)
         .prefetch_related(Prefetch("topics", queryset=topic_qs))
@@ -106,9 +102,7 @@ def subject_detail_for_user(user: User, subject_id: int) -> dict[str, Any] | Non
 
     progress_map = {
         p.lesson_id: p
-        for p in LessonProgress.objects.filter(
-            user=user, lesson__topic__section__subject=subject
-        )
+        for p in LessonProgress.objects.filter(user=user, lesson__topic__section__subject=subject)
     }
 
     sections_data = []
@@ -165,9 +159,7 @@ def lesson_detail_for_user(user: User, lesson_id: int) -> dict[str, Any] | None:
     from .access import next_lesson  # local import — избегаем циклической зависимости
 
     try:
-        lesson = Lesson.objects.select_related(
-            "topic__section__subject"
-        ).get(pk=lesson_id)
+        lesson = Lesson.objects.select_related("topic__section__subject").get(pk=lesson_id)
     except Lesson.DoesNotExist:
         return None
 

@@ -3,6 +3,7 @@
 Звёзды (за уроки), лиги (Bronze/Silver/Gold), персонаж + предметы из сундуков,
 турниры, кланы, друзья, челленджи. Бизнес-логика — на следующих этапах.
 """
+
 from __future__ import annotations
 
 from django.conf import settings
@@ -244,9 +245,7 @@ class Challenge(TimestampedModel):
 
 
 class ChallengeParticipant(TimestampedModel):
-    challenge = models.ForeignKey(
-        Challenge, on_delete=models.CASCADE, related_name="participants"
-    )
+    challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE, related_name="participants")
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

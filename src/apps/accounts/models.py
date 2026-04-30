@@ -1,4 +1,5 @@
 """User model (custom, phone-based) and login event log."""
+
 from __future__ import annotations
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin

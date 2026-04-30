@@ -1,4 +1,5 @@
 """Dev SMS provider — пишет сообщения в логи."""
+
 from __future__ import annotations
 
 import logging

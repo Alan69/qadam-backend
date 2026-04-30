@@ -1,4 +1,5 @@
 """Обновление LessonProgress по результатам мини-теста (max-merge)."""
+
 from __future__ import annotations
 
 from django.utils import timezone

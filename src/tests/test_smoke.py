@@ -1,4 +1,5 @@
 """Smoke-тесты: миграции применяются, admin регистрирует все модели."""
+
 import pytest
 from django.apps import apps
 from django.contrib import admin

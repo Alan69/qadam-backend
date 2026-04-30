@@ -1,4 +1,5 @@
 """Тесты OTP-сервиса (генерация, проверка, rate limits)."""
+
 import pytest
 
 from apps.accounts.services.otp import (

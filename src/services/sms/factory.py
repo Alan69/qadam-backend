@@ -1,4 +1,5 @@
 """Factory: возвращает SmsProvider на основе настройки QADAM["SMS_PROVIDER"]."""
+
 from __future__ import annotations
 
 from functools import lru_cache
@@ -23,6 +24,5 @@ def get_sms_provider() -> SmsProvider:
         return _PROVIDERS[name]()
     except KeyError as exc:
         raise ImproperlyConfigured(
-            f"Unknown SMS_PROVIDER={name!r}. "
-            f"Allowed: {sorted(_PROVIDERS)}"
+            f"Unknown SMS_PROVIDER={name!r}. Allowed: {sorted(_PROVIDERS)}"
         ) from exc
